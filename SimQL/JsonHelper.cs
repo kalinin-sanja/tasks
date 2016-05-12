@@ -28,7 +28,7 @@ namespace SimQLTask
 					int index = 0;
 					foreach (JToken value in token.Children())
 					{
-						FillDictionaryFromJToken(entries, value, Join(prefix, ""));
+						FillDictionaryFromJToken(entries, value, prefix);
 						index++;
 					}
 					break;
