@@ -30,6 +30,8 @@ namespace EvalTask
         {
             var engine = VsaEngine.CreateEngine();
             var res = Eval.JScriptEvaluate(exprStr, engine).ToString().Replace(",", ".");
+            if (res == "бесконечность")
+                res = "Infinity";
             return res == "∞" ? "Infinity" : res;
 
         }
