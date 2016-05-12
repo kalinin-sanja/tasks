@@ -22,7 +22,7 @@ namespace JsonConversion
         public static double ParseDouble(string input)
         {
             var value = input.Replace("'", "");
-            return double.Parse(value);
+            return double.Parse(value, CultureInfo.InvariantCulture);
         }
         public override bool CanConvert(Type objectType)
         {
