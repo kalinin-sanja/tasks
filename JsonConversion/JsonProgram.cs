@@ -33,12 +33,12 @@ namespace JsonConversion
 	    {
 	        var replace = json.Replace("'", "");
 	        var result = replace;
-            var regex = new Regex(@",\d\d""");
-            var matches = regex.Matches(replace);
-	        foreach (Match match in matches)
-	        {
-	            result = result.Remove(match.Index, 1).Insert(match.Index, ".");
-	        }
+//            var regex = new Regex(@",\d\d""");
+//            var matches = regex.Matches(replace);
+//	        foreach (Match match in matches)
+//	        {
+//	            result = result.Remove(match.Index, 1).Insert(match.Index, ".");
+//	        }
 	        return result;
 	    }
 	}
