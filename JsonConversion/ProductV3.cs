@@ -9,8 +9,8 @@ namespace JsonConversion
         public int Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("price")]
-        public decimal Price { get; set; }
+        [JsonProperty("price", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public decimal? Price { get; set; }
         [JsonProperty("count")]
         public int Count { get; set; }
         [JsonProperty("dimensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
