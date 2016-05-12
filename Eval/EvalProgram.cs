@@ -26,7 +26,8 @@ namespace EvalTask
 
         static string EvalExpression(string exprStr)
         {
-            exprStr = exprStr.Replace("sqrt(", "Math.Sqrt((double)");
+            for(var i=0;i<10;++i)
+                exprStr = exprStr.Replace("sqrt"+new string(' ', i)+"(", "Math.Sqrt((double)");
             exprStr = Regex.Replace(exprStr, @"\d+(?:\.?)(?:\d)*\s*%", new MatchEvaluator(ProcentEvaluator));
             MethodInfo function = CreateFunction(exprStr);
             string result = function.Invoke(null, null).ToString();
