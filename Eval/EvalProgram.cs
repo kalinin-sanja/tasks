@@ -12,26 +12,13 @@ namespace EvalTask
 {
     class EvalProgram
     {
-        static double Evaluate(string expression)
-        {
-            
-            try
-            {
-                var loDataTable = new DataTable();
-                var loDataColumn = new DataColumn("Eval", typeof(double), expression);
-                loDataTable.Columns.Add(loDataColumn);
-                loDataTable.Rows.Add(0);
-                return (double) (loDataTable.Rows[0]["Eval"]);
-            }
-            catch(DivideByZeroException)
-            {
-                return double.NaN;
-            }
-        }
         static string EvalExpression(string exprStr)
         {
+            
             var expr = new NCalc.Expression(exprStr);
-            return ((double) expr.Evaluate()).ToString(CultureInfo.InvariantCulture);
+            var x = expr.Evaluate().ToString();
+            x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
+            return x.Replace(",", ".");
         }
         static void Main(string[] args)
         {
@@ -39,11 +26,21 @@ namespace EvalTask
             string output = EvalExpression(input);
             Console.WriteLine(output);
         }
-
+        [Test]
+        public void Tests()
+        {
+            Assert.AreEqual("0.5", EvalExpression("1/2"));
+        }
         [Test]
         public void TestEvaluator()
         {
             Assert.AreEqual("5.8", EvalExpression("2.8+3"));
+        }
+
+        [Test]
+        public void Integers_Test()
+        {
+            Assert.AreEqual("12", EvalExpression("7+4+1"));
         }
 
         [Test]
