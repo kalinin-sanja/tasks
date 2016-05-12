@@ -103,5 +103,16 @@ namespace JsonConversion
 
             Assert.NotNull(result);
         }
+        [Test]
+        public void Convert_Schema_NotNull()
+        {
+            var oldJson = File.ReadAllText("2_2.v2.json");
+
+            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
+            var result = JsonConvert.SerializeObject(wareHouseV3Converted);
+
+            Assert.NotNull(result);
+        }
     }
 }
