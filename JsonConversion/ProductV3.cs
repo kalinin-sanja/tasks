@@ -11,8 +11,8 @@ namespace JsonConversion
         public string Name { get; set; }
         [JsonProperty("price", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Price { get; set; }
-        [JsonProperty("count")]
-        public int Count { get; set; }
+        [JsonProperty("count", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? Count { get; set; }
         [JsonProperty("dimensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Dimension Dimensions { get; set; }
     }

@@ -10,7 +10,7 @@ namespace JsonConversion
         [JsonProperty("price")]
         public decimal? Price { get; set; }
         [JsonProperty("count")]
-        public int Count { get; set; }
+        public int? Count { get; set; }
         [JsonProperty("size")]
         public List<decimal> Size { get; set; }
     }
