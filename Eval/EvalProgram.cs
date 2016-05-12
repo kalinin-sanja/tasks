@@ -1,9 +1,12 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CSharp;
 //using Microsoft.JScript;
 //using Microsoft.JScript.Vsa;
 using NUnit.Framework;
@@ -23,22 +26,57 @@ namespace EvalTask
 
         static string EvalExpression(string exprStr)
         {
-            exprStr = Regex.Replace(exprStr, "\\d+(?:\\.?)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
-            var expr = new NCalc.Expression(exprStr);
-            expr.EvaluateFunction += delegate (string name, FunctionArgs args)
-            {
-                if (String.Equals(name, "sqrt", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    var value = System.Convert.ToDouble(args.EvaluateParameters()[0]);
-                    args.HasResult = true;
-                    args.Result = Math.Sqrt(value);
-                }
-            };
+            exprStr = exprStr.Replace("sqrt(", "Math.Sqrt((double)");
+            exprStr = Regex.Replace(exprStr, @"\d+(?:\.?)(?:\d)*\s*%", new MatchEvaluator(ProcentEvaluator));
+            MethodInfo function = CreateFunction(exprStr);
+            string result = function.Invoke(null, null).ToString();
+            
+            //exprStr = Regex.Replace(exprStr, "\\d+(?:\\.?)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
+            //var expr = new NCalc.Expression(exprStr);
+            //expr.EvaluateFunction += delegate (string name, FunctionArgs args)
+            //{
+            //    if (String.Equals(name, "sqrt", StringComparison.CurrentCultureIgnoreCase))
+            //    {
+            //        var value = System.Convert.ToDouble(args.EvaluateParameters()[0]);
+            //        args.HasResult = true;
+            //        args.Result = Math.Sqrt(value);
+            //    }
+            //};
 
-            var x = expr.Evaluate().ToString();
-            x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
-            return x.Replace(",", ".");
+            //var x = expr.Evaluate().ToString();
+            //x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
+            //return x.Replace(",", ".");
+            
+            result = result.Replace("∞", "Infinity").Replace("бесконечность", "Infinity").Replace(",", ".");
+            return result.Replace(",", ".");
         }
+
+        public static MethodInfo CreateFunction(string function)
+        {
+            string code = @"
+        using System;
+            
+        namespace UserFunctions
+        {                
+            public class BinaryFunction
+            {                
+                public static double Function()
+                {
+                    return ((double)(func_xy));
+                }
+            }
+        }
+    ";
+
+            string finalCode = code.Replace("func_xy", function);
+
+            CSharpCodeProvider provider = new CSharpCodeProvider();
+            CompilerResults results = provider.CompileAssemblyFromSource(new CompilerParameters(), finalCode);
+
+            Type binaryFunction = results.CompiledAssembly.GetType("UserFunctions.BinaryFunction");
+            return binaryFunction.GetMethod("Function");
+        }
+
 
 
         static void Main(string[] args)
