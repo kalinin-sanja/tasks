@@ -6,7 +6,7 @@ namespace JsonConversion
     public class WareHouseV2
     {
         [JsonProperty("version")]
-        public int Version { get; set; }
+        public string Version { get; set; }
         [JsonProperty("products")]
         public Dictionary<int, ProductV2> Products { get; set; }
     }

@@ -12,7 +12,7 @@ namespace JsonConversion
         {
             var result = new WareHouseV3
             {
-                Version = 3,
+                Version = "3",
                 Products = wareHouseV2.Products.Select(kv => new ProductV3
                 {
                     Id = kv.Key,

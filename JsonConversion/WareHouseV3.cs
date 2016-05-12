@@ -12,7 +12,7 @@ namespace JsonConversion
 //        }
 
         [JsonProperty("version")]
-        public int Version { get; set; }
+        public string Version { get; set; }
         [JsonProperty("products")]
         public List<ProductV3> Products { get; set; }
     }
