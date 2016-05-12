@@ -2,6 +2,8 @@
 using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
+using Microsoft.JScript;
+using Microsoft.JScript.Vsa;
 using NUnit.Framework;
 
 namespace EvalTask
@@ -10,6 +12,7 @@ namespace EvalTask
     {
         static double Evaluate(string expression)
         {
+            
             try
             {
                 var loDataTable = new DataTable();
@@ -18,14 +21,16 @@ namespace EvalTask
                 loDataTable.Rows.Add(0);
                 return (double) (loDataTable.Rows[0]["Eval"]);
             }
-            catch
+            catch(DivideByZeroException)
             {
                 return double.NaN;
             }
         }
         static string EvalExpression(string exprStr)
         {
-            return Evaluate(exprStr).ToString(CultureInfo.InvariantCulture);
+            var engine = VsaEngine.CreateEngine();
+            var res = Eval.JScriptEvaluate(exprStr, engine).ToString().Replace(",", ".");
+            return res == "∞" ? "Infinity" : res;
 
         }
         static void Main(string[] args)
@@ -51,6 +56,16 @@ namespace EvalTask
         public void OneArg_Test()
         {
             Assert.AreEqual("0.2", EvalExpression("0.2"));
+        }
+        [Test]
+        public void ZeroDiv_Test()
+        {
+            Assert.AreEqual("NaN", EvalExpression("0.0/0"));
+        }
+        [Test]
+        public void Inf_Test()
+        {
+            Assert.AreEqual("Infinity", EvalExpression("1.0/0"));
         }
     }
 }
