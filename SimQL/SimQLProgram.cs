@@ -32,32 +32,33 @@ namespace SimQLTask
 	public struct Token
 	{
 		public string Path;
-		public double Value;
+		public string Value;
 
-		public Token(string path, double value)
+		public Token(string path, string value)
 		{
 			Path = path;
 			Value = value;
 		}
 	}
+
 	public class JsonHelper
 	{
-		public static Dictionary<string, object> DeserializeAndFlatten(string json)
+		public static List<Token> DeserializeAndFlatten(string json)
 		{
-			Dictionary<string, object> dict = new Dictionary<string, object>();
+			List<Token> entries = new List<Token>();
 			JToken token = JToken.Parse(json);
-			FillDictionaryFromJToken(dict, token, "");
-			return dict;
+			FillDictionaryFromJToken(entries, token, "");
+			return entries;
 		}
 
-		private static void FillDictionaryFromJToken(Dictionary<string, object> dict, JToken token, string prefix)
+		private static void FillDictionaryFromJToken(List<Token> entries, JToken token, string prefix)
 		{
 			switch (token.Type)
 			{
 				case JTokenType.Object:
 					foreach (JProperty prop in token.Children<JProperty>())
 					{
-						FillDictionaryFromJToken(dict, prop.Value, Join(prefix, prop.Name));
+						FillDictionaryFromJToken(entries, prop.Value, Join(prefix, prop.Name));
 					}
 					break;
 
@@ -65,13 +66,13 @@ namespace SimQLTask
 					int index = 0;
 					foreach (JToken value in token.Children())
 					{
-						FillDictionaryFromJToken(dict, value, Join(prefix, ""));
+						FillDictionaryFromJToken(entries, value, Join(prefix, ""));
 						index++;
 					}
 					break;
 
 				default:
-					dict.Add(prefix, ((JValue)token).Value);
+					entries.Add(new Token(prefix, ((JValue)token).Value.ToString()));
 					break;
 			}
 		}
@@ -99,25 +100,35 @@ namespace SimQLTask
 			var queries = jObject["queries"].ToObject<string[]>();
 
 			var flatternData = JsonHelper.DeserializeAndFlatten(data);
+			var executeQueries = new List<double>();
 			foreach (var query in queries)
 			{
 				var funcInfo = QuerryFunctions.Parse(query);
-				var filteredData = flatternData.Where(x => x.Key == funcInfo.Args);
-				switch (funcInfo.Name)
+				var filteredData = flatternData.Where(x => x.Path == funcInfo.Args);
+				try
 				{
-					case "sum":
-						yield return filteredData.Sum(x => double.Parse(x.Value.ToString()));
-						break;
-					case "min":
-						yield return filteredData.Min(x => double.Parse(x.Value.ToString()));
-						break;
-					case "max":
-						yield return filteredData.Max(x => double.Parse(x.Value.ToString()));
-						break;
+					switch (funcInfo.Name)
+					{
+						case "sum":
+							executeQueries.Add(filteredData.Sum(x => double.Parse(x.Value)));
+							break;
+						case "min":
+							executeQueries.Add(filteredData.Min(x => double.Parse(x.Value)));
+							break;
+						case "max":
+							executeQueries.Add(filteredData.Max(x => double.Parse(x.Value)));
+							break;
+					}
 				}
+				catch (FormatException)
+				{
+					executeQueries.Add(0);
+				}
+
 			}
 
 
+			return executeQueries;
 		}
 
 
