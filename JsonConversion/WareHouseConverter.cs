@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -17,11 +19,30 @@ namespace JsonConversion
                 {
                     Id = kv.Key,
                     Name = kv.Value.Name,
-                    Price = kv.Value.Price,
+                    Price = ParsePrice(kv.Value.Price),
                     Count = kv.Value.Count,
                     Dimensions = kv.Value.Size == null ? null : Dimension.FromArray(kv.Value.Size)
                 }).ToList()
             };
+            return result;
+        }
+
+        public static double? ParsePrice(object price)
+        {
+            double? result;
+            if (price is string)
+            {
+                double res;
+                result = double.TryParse((string) price, out res) ? res : 0;
+            }
+            else if (price is long)
+            {
+                result = (long) price;
+            }
+            else
+            {
+                result = (double?) price;
+            }
             return result;
         }
     }
