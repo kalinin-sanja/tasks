@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 //using Microsoft.JScript.Vsa;
 using NUnit.Framework;
 using NCalc;
+using NCalc.Domain;
 
 namespace EvalTask
 {
@@ -22,18 +23,8 @@ namespace EvalTask
 
         static string EvalExpression(string exprStr)
         {
-            /*var regex = new Regex(@"(^|[^\.])(\d+\/\d+)([^\.]|$)");
-            foreach (var match in regex.Matches(exprStr))
-            {
-                var expRes = new NCalc.Expression(match.ToString()).Evaluate();
-                long res = Convert.ToInt64(expRes);
-                //bool can = long.TryParse(expRes, out res);
-                //if (can)
-                exprStr = exprStr.Replace(match.ToString(), res.ToString());
-            }*/
-            exprStr = Regex.Replace(exprStr, "\\d+(?:.)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
+            exprStr = Regex.Replace(exprStr, "\\d+(?:\\.?)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
             var expr = new NCalc.Expression(exprStr);
-
             expr.EvaluateFunction += delegate (string name, FunctionArgs args)
             {
                 if (String.Equals(name, "sqrt", StringComparison.CurrentCultureIgnoreCase))
@@ -43,10 +34,13 @@ namespace EvalTask
                     args.Result = Math.Sqrt(value);
                 }
             };
+
             var x = expr.Evaluate().ToString();
             x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
             return x.Replace(",", ".");
         }
+
+
         static void Main(string[] args)
         {
             string input = Console.In.ReadToEnd();
@@ -102,11 +96,13 @@ namespace EvalTask
             Assert.AreEqual("1", EvalExpression("sqrt(1)"));
         }
 
+
+        [TestCase("2+sqrt(25)*sqrt(4)", Result = "12", TestName = "SQRTHardTest")]
         [TestCase("sqrt(25)", Result = "5", TestName = "SQRTTest")]
-        [TestCase("sqrt(25+1-1)", Result = "5", TestName = "SQRTTest")]
-        [TestCase("12.1%", Result = "0.121", TestName = "%Test")]
-        [TestCase("12.%", Result = "0.12", TestName = "%Test")]
-        [TestCase("12%", Result = "0.12", TestName = "%Test")]
+        [TestCase("sqrt(25+1-1)", Result = "5", TestName = "SQRTTest2")]
+        [TestCase("12.1%", Result = "0.121", TestName = "%Test1")]
+        [TestCase("12.%", Result = "0.12", TestName = "%Test2")]
+        [TestCase("12%", Result = "0.12", TestName = "%Test3")]
         public string TestEngine(string input)
         {
             return EvalExpression(input);
