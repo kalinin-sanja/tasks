@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.JScript;
 using Microsoft.JScript.Vsa;
 using NUnit.Framework;
+using NCalc;
 
 namespace EvalTask
 {
@@ -29,9 +30,8 @@ namespace EvalTask
         }
         static string EvalExpression(string exprStr)
         {
-            var engine = VsaEngine.CreateEngine();
-            var res = Eval.JScriptEvaluate(exprStr, engine).ToString().Replace(",", ".").Replace("бесконечность", "Infinity");
-            return res;
+            var expr = new NCalc.Expression(exprStr);
+            return ((double) expr.Evaluate()).ToString(CultureInfo.InvariantCulture);
         }
         static void Main(string[] args)
         {
@@ -56,6 +56,11 @@ namespace EvalTask
         public void OneArg_Test()
         {
             Assert.AreEqual("0.2", EvalExpression("0.2"));
+        }
+        [Test]
+        public void Drobi()
+        {
+            Assert.AreEqual("0.5", EvalExpression("1/2"));
         }
         [Test]
         public void ZeroDiv_Test()
