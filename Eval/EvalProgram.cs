@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 //using Microsoft.JScript;
 //using Microsoft.JScript.Vsa;
 using NUnit.Framework;
@@ -14,15 +15,21 @@ namespace EvalTask
     {
         static string EvalExpression(string exprStr)
         {
-
-            var expr = new NCalc.Expression(exprStr);
-            expr.EvaluateParameter += delegate (string name, ParameterArgs args)
+            var regex = new Regex(@"(^|[^\.])(\d+\/\d+)([^\.]|$)");
+            foreach (var match in regex.Matches(exprStr))
             {
-                long num = 0;
-                bool can = long.TryParse(args.ToString(), out num);
-                if (can)
-                    args.Result = num;
-            };
+                var expRes = new NCalc.Expression(match.ToString()).Evaluate();
+                long res = Convert.ToInt64(expRes);
+                //bool can = long.TryParse(expRes, out res);
+                //if (can)
+                    exprStr = exprStr.Replace(match.ToString(), res.ToString());
+            }
+            var expr = new NCalc.Expression(exprStr);
+            foreach (var param in expr.Parameters)
+            {
+                var xx = param;
+                var y = param.ToString();
+            }
             var x = expr.Evaluate().ToString();
             x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
             return x.Replace(",", ".");
@@ -36,7 +43,7 @@ namespace EvalTask
         [Test]
         public void Tests()
         {
-            Assert.AreEqual("0.5", EvalExpression("1/2"));
+            Assert.AreEqual("0", EvalExpression("1/2"));
         }
         [Test]
         public void TestEvaluator()
