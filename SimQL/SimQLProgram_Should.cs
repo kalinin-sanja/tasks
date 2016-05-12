@@ -44,5 +44,13 @@ namespace SimQLTask
 
 		}
 
+		[Test]
+		public void DoSomething_WhenSomething2()
+		{
+
+			var results = SimQLProgram.ExecuteQueries("{\"data\":{\"empty\":[],\"x\":[0.1,0.2,0.3],\"a\":[{\"b\":10,\"c\":[1,2,3]},{\"b\":30,\"c\":[4]},{\"b\":11,\"c\":[-1,-2,9]},{\"b\":22,\"c\":[-1,-2,9]},{\"d\":500}]},\"queries\":[\"sum(a.b from 12)\",\"sum(a.b from -100 top 1)\",\"sum(a.b from -100.1 top 0)\",\"sum(a.b from 1000 top 10)\",\"sum(a.b from 30.0 top 10)\",\"sum(a.b from -100 top 100)\"]}").ToList();
+			Assert.Contains("sum(a.b from 12) = 52", results);
+		}
+
 	}
 }
