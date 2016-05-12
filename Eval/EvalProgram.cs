@@ -88,5 +88,10 @@ namespace EvalTask
         {
             Assert.AreEqual("Infinity", EvalExpression("1.0/0"));
         }
+        [Test]
+        public void Sqrt_Test()
+        {
+            Assert.AreEqual("1", EvalExpression("sqrt(1)"));
+        }
     }
 }
