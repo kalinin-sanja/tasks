@@ -19,14 +19,14 @@ namespace SimQLTask
 
 
 
-		public static IEnumerable<double> ExecuteQueries(string json)
+		public static IEnumerable<string> ExecuteQueries(string json)
 		{
 			var jObject = JObject.Parse(json);
 			var data = jObject["data"].ToString();
 			var queries = jObject["queries"].ToObject<string[]>();
 
 			var flatternData = JsonHelper.DeserializeAndFlatten(data);
-			var executeQueries = new List<double>();
+			var executeQueries = new List<string>();
 			foreach (var query in queries)
 			{
 				var funcInfo = QuerryFunctions.Parse(query);
@@ -36,19 +36,19 @@ namespace SimQLTask
 					switch (funcInfo.Name)
 					{
 						case "sum":
-							executeQueries.Add(filteredData.Sum(x => double.Parse(x.Value)));
+							executeQueries.Add($"{query} = {filteredData.Sum(x => double.Parse(x.Value))}");
 							break;
 						case "min":
-							executeQueries.Add(filteredData.Min(x => double.Parse(x.Value)));
+							executeQueries.Add($"{query} = {filteredData.Min(x => double.Parse(x.Value))}");
 							break;
 						case "max":
-							executeQueries.Add(filteredData.Max(x => double.Parse(x.Value)));
+							executeQueries.Add($"{query} = {filteredData.Max(x => double.Parse(x.Value))}");
 							break;
 					}
 				}
 				catch (FormatException)
 				{
-					executeQueries.Add(0);
+					executeQueries.Add($"{query} = {0}");
 				}
 
 			}
