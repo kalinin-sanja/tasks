@@ -39,7 +39,7 @@ namespace JsonConversion
 //	        {
 //	            result = result.Remove(match.Index, 1).Insert(match.Index, ".");
 //	        }
-	        return result;
+            return json;
 	    }
 	}
 
