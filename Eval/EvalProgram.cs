@@ -2,6 +2,7 @@
 using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Text;
 using Microsoft.JScript;
 using Microsoft.JScript.Vsa;
 using NUnit.Framework;
@@ -29,11 +30,8 @@ namespace EvalTask
         static string EvalExpression(string exprStr)
         {
             var engine = VsaEngine.CreateEngine();
-            var res = Eval.JScriptEvaluate(exprStr, engine).ToString().Replace(",", ".");
-            if (res == "бесконечность")
-                res = "Infinity";
-            return res == "∞" ? "Infinity" : res;
-
+            var res = Eval.JScriptEvaluate(exprStr, engine).ToString().Replace(",", ".").Replace("бесконечность", "Infinity");
+            return res;
         }
         static void Main(string[] args)
         {
