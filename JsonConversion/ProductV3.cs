@@ -20,13 +20,13 @@ namespace JsonConversion
     public class Dimension
     {
         [JsonProperty("l")]
-        public int Length { get; set; }
+        public decimal Length { get; set; }
         [JsonProperty("w")]
-        public int Width { get; set; }
+        public decimal Width { get; set; }
         [JsonProperty("h")]
-        public int Height { get; set; }
+        public decimal Height { get; set; }
 
-        public static Dimension FromArray(List<int> size)
+        public static Dimension FromArray(List<decimal> size)
         {
             return new Dimension {Height = size[1], Length = size[2], Width = size[0]};
         }

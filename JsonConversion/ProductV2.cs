@@ -12,6 +12,6 @@ namespace JsonConversion
         [JsonProperty("count")]
         public int Count { get; set; }
         [JsonProperty("size")]
-        public List<int> Size { get; set; }
+        public List<decimal> Size { get; set; }
     }
 }
