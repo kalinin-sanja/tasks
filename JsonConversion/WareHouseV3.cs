@@ -5,12 +5,6 @@ namespace JsonConversion
 {
     public class WareHouseV3
     {
-//        public override bool Equals(object obj)
-//        {
-//            var wh2 = (WareHouseV3)
-//            return base.Equals(obj);
-//        }
-
         [JsonProperty("version")]
         public string Version { get; set; }
         [JsonProperty("products")]

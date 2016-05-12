@@ -19,7 +19,7 @@ namespace JsonConversion
                 {
                     Id = kv.Key,
                     Name = kv.Value.Name,
-                    Price = ParsePrice(kv.Value.Price),
+                    Price = kv.Value.Price,
                     Count = kv.Value.Count,
                     Dimensions = kv.Value.Size == null ? null : Dimension.FromArray(kv.Value.Size)
                 }).ToList()
@@ -27,24 +27,24 @@ namespace JsonConversion
             return result;
         }
 
-        public static double? ParsePrice(object price)
-        {
-            double? result;
-            if (price is string)
-            {
-                double res;
-                result = double.TryParse((string) price, out res) ? res : 0;
-            }
-            else if (price is long)
-            {
-                result = (long) price;
-            }
-            else
-            {
-                result = (double?) price;
-            }
-            return result;
-        }
+//        public static double? ParsePrice(object price)
+//        {
+//            double? result;
+//            if (price is string)
+//            {
+//                double res;
+//                result = double.TryParse((string) price, out res) ? res : 0;
+//            }
+//            else if (price is long)
+//            {
+//                result = (long) price;
+//            }
+//            else
+//            {
+//                result = (double?) price;
+//            }
+//            return result;
+//        }
     }
 
     [TestFixture]
@@ -56,7 +56,7 @@ namespace JsonConversion
             var oldJson = File.ReadAllText("1.v2.json");
             var newJson = File.ReadAllText("1.v3.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
 
@@ -68,7 +68,7 @@ namespace JsonConversion
         {
             var oldJson = File.ReadAllText("1.v2.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
             var result = JsonConvert.SerializeObject(wareHouseV3Converted);
 
@@ -81,7 +81,7 @@ namespace JsonConversion
             var oldJson = File.ReadAllText("2.v2.json");
             var newJson = File.ReadAllText("2.v3.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
 
@@ -93,7 +93,7 @@ namespace JsonConversion
         {
             var oldJson = File.ReadAllText("2.v2.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
             var result = JsonConvert.SerializeObject(wareHouseV3Converted);
 
@@ -106,7 +106,7 @@ namespace JsonConversion
             var oldJson = File.ReadAllText("2.v2.json");
             var newJson = File.ReadAllText("2.v3.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
 
@@ -118,7 +118,7 @@ namespace JsonConversion
         {
             var oldJson = File.ReadAllText("2_1.v2.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
             var result = JsonConvert.SerializeObject(wareHouseV3Converted);
 
@@ -129,7 +129,18 @@ namespace JsonConversion
         {
             var oldJson = File.ReadAllText("2_2.v2.json");
 
-            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
+            var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
+            var result = JsonConvert.SerializeObject(wareHouseV3Converted);
+
+            Assert.NotNull(result);
+        }
+        [Test]
+        public void Convert_InvCul_NotNull()
+        {
+            var oldJson = File.ReadAllText("3.v2.json");
+
+            var wareHouseV2 = JsonProgram.ParseToWareHouseV2(oldJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
             var result = JsonConvert.SerializeObject(wareHouseV3Converted);
 

@@ -20,19 +20,19 @@ namespace JsonConversion
     public class Dimension
     {
         [JsonProperty("l", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? Length { get; set; }
+        public double? Length { get; set; }
         [JsonProperty("w", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? Width { get; set; }
+        public double? Width { get; set; }
         [JsonProperty("h", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public decimal? Height { get; set; }
+        public double? Height { get; set; }
 
-        public static Dimension FromArray(List<decimal> size)
+        public static Dimension FromArray(List<double> size)
         {
             return new Dimension
             {
-                Height = size.Count > 1 ? size[1] : (decimal?) null,
-                Length = size.Count > 2 ? size[2] : (decimal?) null,
-                Width = size.Count > 0 ? size[0] : (decimal?) null
+                Height = size.Count > 1 ? size[1] : (double?)null,
+                Length = size.Count > 2 ? size[2] : (double?)null,
+                Width = size.Count > 0 ? size[0] : (double?)null
             };
         }
     }

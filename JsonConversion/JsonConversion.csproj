@@ -85,6 +85,9 @@
     <None Include="2_1.v2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="3.v2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="2_2.v2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
