@@ -24,5 +24,6 @@ namespace SimQLTask
 				"'queries': ['sum(itemsCount)']}");
 			Assert.AreEqual(new[] { 42 }, results);
 		}
+
 	}
 }
