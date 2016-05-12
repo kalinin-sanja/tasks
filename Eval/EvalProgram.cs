@@ -13,6 +13,13 @@ namespace EvalTask
 {
     class EvalProgram
     {
+        private static string ProcentEvaluator(Match input)
+        {
+            var pre = input.Value.Replace("%", "");
+            var value = double.Parse(pre, CultureInfo.InvariantCulture) / 100;
+            return System.Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
         static string EvalExpression(string exprStr)
         {
             /*var regex = new Regex(@"(^|[^\.])(\d+\/\d+)([^\.]|$)");
@@ -24,6 +31,7 @@ namespace EvalTask
                 //if (can)
                 exprStr = exprStr.Replace(match.ToString(), res.ToString());
             }*/
+            exprStr = Regex.Replace(exprStr, "\\d+(?:.)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
             var expr = new NCalc.Expression(exprStr);
 
             expr.EvaluateFunction += delegate (string name, FunctionArgs args)
@@ -92,6 +100,16 @@ namespace EvalTask
         public void Sqrt_Test()
         {
             Assert.AreEqual("1", EvalExpression("sqrt(1)"));
+        }
+
+        [TestCase("sqrt(25)", Result = "5", TestName = "SQRTTest")]
+        [TestCase("sqrt(25+1-1)", Result = "5", TestName = "SQRTTest")]
+        [TestCase("12.1%", Result = "0.121", TestName = "%Test")]
+        [TestCase("12.%", Result = "0.12", TestName = "%Test")]
+        [TestCase("12%", Result = "0.12", TestName = "%Test")]
+        public string TestEngine(string input)
+        {
+            return EvalExpression(input);
         }
     }
 }
