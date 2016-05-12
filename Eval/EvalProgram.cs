@@ -15,7 +15,7 @@ namespace EvalTask
     {
         static string EvalExpression(string exprStr)
         {
-            var regex = new Regex(@"(^|[^\.])(\d+\/\d+)([^\.]|$)");
+            /*var regex = new Regex(@"(^|[^\.])(\d+\/\d+)([^\.]|$)");
             foreach (var match in regex.Matches(exprStr))
             {
                 var expRes = new NCalc.Expression(match.ToString()).Evaluate();
@@ -23,13 +23,18 @@ namespace EvalTask
                 //bool can = long.TryParse(expRes, out res);
                 //if (can)
                 exprStr = exprStr.Replace(match.ToString(), res.ToString());
-            }
+            }*/
             var expr = new NCalc.Expression(exprStr);
-            foreach (var param in expr.Parameters)
+
+            expr.EvaluateFunction += delegate (string name, FunctionArgs args)
             {
-                var xx = param;
-                var y = param.ToString();
-            }
+                if (String.Equals(name, "sqrt", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var value = System.Convert.ToDouble(args.EvaluateParameters()[0]);
+                    args.HasResult = true;
+                    args.Result = Math.Sqrt(value);
+                }
+            };
             var x = expr.Evaluate().ToString();
             x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
             return x.Replace(",", ".");
@@ -71,7 +76,7 @@ namespace EvalTask
         [Test]
         public void Drobi()
         {
-            Assert.AreEqual("0", EvalExpression("1/2"));
+            Assert.AreEqual("4", EvalExpression("4+2/3"));
         }
         [Test]
         public void ZeroDiv_Test()
