@@ -3,8 +3,8 @@ using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
-using Microsoft.JScript;
-using Microsoft.JScript.Vsa;
+//using Microsoft.JScript;
+//using Microsoft.JScript.Vsa;
 using NUnit.Framework;
 using NCalc;
 
@@ -14,8 +14,15 @@ namespace EvalTask
     {
         static string EvalExpression(string exprStr)
         {
-            
+
             var expr = new NCalc.Expression(exprStr);
+            expr.EvaluateParameter += delegate (string name, ParameterArgs args)
+            {
+                long num = 0;
+                bool can = long.TryParse(args.ToString(), out num);
+                if (can)
+                    args.Result = num;
+            };
             var x = expr.Evaluate().ToString();
             x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
             return x.Replace(",", ".");
@@ -57,7 +64,7 @@ namespace EvalTask
         [Test]
         public void Drobi()
         {
-            Assert.AreEqual("0.5", EvalExpression("1/2"));
+            Assert.AreEqual("0", EvalExpression("1/2"));
         }
         [Test]
         public void ZeroDiv_Test()
