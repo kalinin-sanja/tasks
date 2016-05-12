@@ -18,7 +18,8 @@ namespace JsonConversion
                     Id = kv.Key,
                     Name = kv.Value.Name,
                     Price = kv.Value.Price,
-                    Count = kv.Value.Count
+                    Count = kv.Value.Count,
+                    Dimensions = kv.Value.Size == null ? null : Dimension.FromArray(kv.Value.Size)
                 }).ToList()
             };
             return result;
@@ -37,24 +38,45 @@ namespace JsonConversion
             var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
             var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
-//            var result = JsonConvert.SerializeObject(wareHouseV3);
+
             wareHouseV3.ShouldBeEquivalentTo(wareHouseV3Converted);
-//            Assert.Equ(wareHouseV3, wareHouseV3Converted);
         }
 
         [Test]
-        public void Convert_OnlyProducts_Write()
+        public void Convert_OnlyProducts_NotNull()
         {
             var oldJson = File.ReadAllText("1.v2.json");
-            var newJson = File.ReadAllText("1.v3.json");
 
             var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
-//            var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
             var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
             var result = JsonConvert.SerializeObject(wareHouseV3Converted);
+
             Assert.NotNull(result);
-//            wareHouseV3.ShouldBeEquivalentTo(wareHouseV3Converted);
-            //            Assert.Equ(wareHouseV3, wareHouseV3Converted);
+        }
+
+        [Test]
+        public void Convert_WithDimensions()
+        {
+            var oldJson = File.ReadAllText("2.v2.json");
+            var newJson = File.ReadAllText("2.v3.json");
+
+            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV3 = JsonConvert.DeserializeObject<WareHouseV3>(newJson);
+            var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
+
+            wareHouseV3.ShouldBeEquivalentTo(wareHouseV3Converted);
+        }
+
+        [Test]
+        public void Convert_WithDimensions_NotNull()
+        {
+            var oldJson = File.ReadAllText("2.v2.json");
+
+            var wareHouseV2 = JsonConvert.DeserializeObject<WareHouseV2>(oldJson);
+            var wareHouseV3Converted = WareHouseConverter.Convert(wareHouseV2);
+            var result = JsonConvert.SerializeObject(wareHouseV3Converted);
+
+            Assert.NotNull(result);
         }
     }
 }

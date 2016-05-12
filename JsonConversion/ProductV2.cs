@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace JsonConversion
 {
@@ -10,5 +11,7 @@ namespace JsonConversion
         public decimal Price { get; set; }
         [JsonProperty("count")]
         public int Count { get; set; }
+        [JsonProperty("size")]
+        public List<int> Size { get; set; }
     }
 }

@@ -1,0 +1,38 @@
+﻿{
+	"version": "3",
+	"products": [
+		{
+			"id": 10,
+			"name": "Pen",
+			"price": 12,
+			"count": 100,
+			"dimensions": {
+				"w": 5,
+				"l": 150,
+				"h": 5
+			}
+		},
+		{
+			"id": 20,
+			"name": "Pencil",
+			"price": 8,
+			"count": 1000,
+			"dimensions": {
+				"h": 4,
+				"w": 4,
+				"l": 140
+			}
+		},
+		{
+			"id": 30,
+			"name": "Box",
+			"price": 12.1,
+			"dimensions": {
+				"l": 20,
+				"w": 15,
+				"h": 20
+			},
+			"count": 50
+		}
+	]
+}
