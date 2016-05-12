@@ -10,5 +10,10 @@ namespace SimQLTask
 			Path = path;
 			Value = value;
 		}
+
+		public override string ToString()
+		{
+			return $"[{Path}] = {Value}";
+        }
 	}
 }
