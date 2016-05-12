@@ -1,0 +1,72 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"id": "https://design-camp.firebaseio.com/warehouse-v3-schema.json",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"version": {
+			"enum": [ "3" ]
+		},
+		"products": {
+			"type": "array",
+			"items": {
+				"anyOf": [
+					{ "type": "null" },
+					{
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"id": {
+								"type": "integer"
+							},
+							"name": {
+								"type": "string"
+							},
+							"price": {
+								"type": "number"
+							},
+							"dimensions": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"l": {
+										"type": "number"
+									},
+									"w": {
+										"type": "number"
+									},
+									"h": {
+										"type": "number"
+									}
+								}
+							},
+							"count": {
+								"type": "integer"
+							}
+						}
+					}
+				]
+			}
+		},
+		"workers": {
+			"type": "array",
+			"items": {
+				"anyOf": [
+					{ "type": "null" },
+					{
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"id": {
+								"type": "integer"
+							},
+							"name": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+}
