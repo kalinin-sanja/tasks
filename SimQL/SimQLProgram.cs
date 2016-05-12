@@ -36,13 +36,13 @@ namespace SimQLTask
 					switch (funcInfo.Name)
 					{
 						case "sum":
-							executeQueries.Add($"{query} = {filteredData.Sum(x => double.Parse(x.Value))}");
+							executeQueries.Add($"{query} = {filteredData.Sum(x => double.Parse(x.Value, CultureInfo.InvariantCulture))}");
 							break;
 						case "min":
-							executeQueries.Add($"{query} = {filteredData.Min(x => double.Parse(x.Value))}");
+							executeQueries.Add($"{query} = {filteredData.Min(x => double.Parse(x.Value, CultureInfo.InvariantCulture))}");
 							break;
 						case "max":
-							executeQueries.Add($"{query} = {filteredData.Max(x => double.Parse(x.Value))}");
+							executeQueries.Add($"{query} = {filteredData.Max(x => double.Parse(x.Value, CultureInfo.InvariantCulture))}");
 							break;
 					}
 				}
