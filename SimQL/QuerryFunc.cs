@@ -27,10 +27,13 @@ namespace SimQLTask
 			var parsed = s.Split(seps, StringSplitOptions.RemoveEmptyEntries);
 			switch (parsed.Length)
 			{
+
 				case 6:
 					return new QueryFunc(parsed[0].ToLower(), parsed[1], int.Parse(parsed[5], NumberStyles.Any, CultureInfo.InvariantCulture), double.Parse(parsed[3], NumberStyles.Any, CultureInfo.InvariantCulture));
 				case 4:
-					return new QueryFunc(parsed[0].ToLower(), parsed[1], int.Parse(parsed[5], NumberStyles.Any, CultureInfo.InvariantCulture));
+					if (parsed[2] == "top")
+						return new QueryFunc(parsed[0].ToLower(), parsed[1], int.Parse(parsed[5], NumberStyles.Any, CultureInfo.InvariantCulture));
+					return new QueryFunc(parsed[0].ToLower(), parsed[1], null, double.Parse(parsed[3], NumberStyles.Any, CultureInfo.InvariantCulture));
 				default:
 					return new QueryFunc(parsed[0].ToLower(), parsed[1]);
 
