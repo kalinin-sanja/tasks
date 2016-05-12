@@ -2,16 +2,20 @@
 using System.CodeDom.Compiler;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.CSharp;
 //using Microsoft.JScript;
 //using Microsoft.JScript.Vsa;
 using NUnit.Framework;
 using NCalc;
 using NCalc.Domain;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace EvalTask
 {
@@ -24,6 +28,22 @@ namespace EvalTask
             return System.Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
+        static string PrepareJSON(string str)
+        {
+            var p = JsonHelper.DeserializeAndFlatten(str);
+            var expr = p.First(x => x.Path == "query").Value.Split(' ');
+            for (var i = 0; i < expr.Length; ++i)
+            {
+                if (p.Any(x => x.Path == "data." + expr[i]))
+                {
+                    var z = p.First(x => x.Path == "data." + expr[i]);
+
+                    expr[i] = z.Value;
+                }
+            }
+            return String.Join(" ", expr);
+        }
+
         static string EvalExpression(string exprStr)
         {
             for(var i=0;i<10;++i)
@@ -32,21 +52,7 @@ namespace EvalTask
             MethodInfo function = CreateFunction(exprStr);
             string result = function.Invoke(null, null).ToString();
             
-            //exprStr = Regex.Replace(exprStr, "\\d+(?:\\.?)(?:\\d*)%", new MatchEvaluator(ProcentEvaluator));
-            //var expr = new NCalc.Expression(exprStr);
-            //expr.EvaluateFunction += delegate (string name, FunctionArgs args)
-            //{
-            //    if (String.Equals(name, "sqrt", StringComparison.CurrentCultureIgnoreCase))
-            //    {
-            //        var value = System.Convert.ToDouble(args.EvaluateParameters()[0]);
-            //        args.HasResult = true;
-            //        args.Result = Math.Sqrt(value);
-            //    }
-            //};
-
-            //var x = expr.Evaluate().ToString();
-            //x = x.Replace("∞", "Infinity").Replace("бесконечность", "Infinity");
-            //return x.Replace(",", ".");
+            
             
             result = result.Replace("∞", "Infinity").Replace("бесконечность", "Infinity").Replace(",", ".");
             return result.Replace(",", ".");
@@ -80,9 +86,12 @@ namespace EvalTask
 
 
 
+
         static void Main(string[] args)
         {
             string input = Console.In.ReadToEnd();
+            if (input[0] == '{')
+                input = PrepareJSON(input);
             string output = EvalExpression(input);
             Console.WriteLine(output);
         }
@@ -134,6 +143,18 @@ namespace EvalTask
         {
             Assert.AreEqual("1", EvalExpression("sqrt(1)"));
         }
+        [Test]
+        public void JSON_Test()
+        {
+            var prevCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var data = @"{
+    'data': { 'x': 11, 'y': [1,2], 'a': {'b':30 }},
+    'query': 'x + y.0 + a.b'
+}";
+            var x = PrepareJSON(data);
+            { }
+        }
 
 
         [TestCase("2+sqrt(25)*sqrt(4)", Result = "12", TestName = "SQRTHardTest")]
@@ -144,6 +165,7 @@ namespace EvalTask
         [TestCase("12%", Result = "0.12", TestName = "%Test3")]
         public string TestEngine(string input)
         {
+            
             return EvalExpression(input);
         }
     }

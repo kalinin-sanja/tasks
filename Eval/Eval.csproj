@@ -60,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EvalProgram.cs" />
+    <Compile Include="JsonHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
