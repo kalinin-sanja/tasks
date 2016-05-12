@@ -28,7 +28,12 @@ namespace JsonConversion
 
         public static Dimension FromArray(List<decimal> size)
         {
-            return new Dimension {Height = size[1], Length = size[2], Width = size[0]};
+            return new Dimension
+            {
+                Height = size.Count > 1 ? size[1] : 0,
+                Length = size.Count > 2 ? size[2] : 0,
+                Width = size.Count > 0 ? size[0] : 0
+            };
         }
     }
 }
