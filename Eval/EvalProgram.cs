@@ -6,8 +6,8 @@ using NUnit.Framework;
 
 namespace EvalTask
 {
-	class EvalProgram
-	{
+    class EvalProgram
+    {
         static double Evaluate(string expression)
         {
             var loDataTable = new DataTable();
@@ -22,28 +22,28 @@ namespace EvalTask
 
         }
         static void Main(string[] args)
-		{
-			string input = Console.In.ReadToEnd();
-			string output = EvalExpression(input);
-			Console.WriteLine(output);
-		}
+        {
+            string input = Console.In.ReadToEnd();
+            string output = EvalExpression(input);
+            Console.WriteLine(output);
+        }
 
-	    [Test]
-	    public void TestEvaluator()
-	    {
-	        Assert.AreEqual("5.8", EvalExpression("2.8+3"));
-	    }
+        [Test]
+        public void TestEvaluator()
+        {
+            Assert.AreEqual("5.8", EvalExpression("2.8+3"));
+        }
 
-	    [Test]
-	    public void Unary_Minus_Test()
-	    {
+        [Test]
+        public void Unary_Minus_Test()
+        {
             Assert.AreEqual("0.2", EvalExpression("-2.8+3"));
         }
 
-	    [Test]
-	    public void OneArg_Test()
-	    {
+        [Test]
+        public void OneArg_Test()
+        {
             Assert.AreEqual("0.2", EvalExpression("0.2"));
         }
-	}
+    }
 }
