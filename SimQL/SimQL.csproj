@@ -52,13 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="JsonCalculator.cs" />
-=======
     <Compile Include="JsonHelper.cs" />
     <Compile Include="QuerryFunc.cs" />
     <Compile Include="QuerryFunctions.cs" />
->>>>>>> e208c2a07a2c5a9c9480a5693713e1b3e62d0c46
     <Compile Include="SimQLProgram.cs" />
     <Compile Include="SimQLProgram_Should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
