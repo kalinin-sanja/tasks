@@ -22,7 +22,7 @@ namespace EvalTask
                 long res = Convert.ToInt64(expRes);
                 //bool can = long.TryParse(expRes, out res);
                 //if (can)
-                    exprStr = exprStr.Replace(match.ToString(), res.ToString());
+                exprStr = exprStr.Replace(match.ToString(), res.ToString());
             }
             var expr = new NCalc.Expression(exprStr);
             foreach (var param in expr.Parameters)
